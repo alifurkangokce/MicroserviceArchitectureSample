@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using Course.IdentityServer.Dto;
 using Course.IdentityServer.Models;
 using Course.Shared.Dtos;
+using IdentityServer4;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Course.IdentityServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
