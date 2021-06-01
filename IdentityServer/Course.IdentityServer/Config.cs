@@ -65,7 +65,7 @@ namespace Course.IdentityServer
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.Email,IdentityServerConstants.StandardScopes.OpenId,IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.OfflineAccess,"roles"
+                        IdentityServerConstants.StandardScopes.OfflineAccess,IdentityServerConstants.LocalApi.ScopeName,"roles"
                     },
                     AccessTokenLifetime = 1*60*60,//1 saat
                     RefreshTokenExpiration = TokenExpiration.Absolute,//1 kere kullanılır
