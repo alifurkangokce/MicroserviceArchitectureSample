@@ -10,17 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Course.Services.Catalog.Services;
-using Course.Services.Catalog.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Options;
 
-namespace Course.Services.Catalog
+namespace Course.Services.PhotoStock
 {
     public class Startup
     {
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -34,31 +30,18 @@ namespace Course.Services.Catalog
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.Authority = Configuration["IdentityServerURL"];
-                options.Audience = "resource_catalog";
+                options.Audience = "photo_stock_catalog";
                 options.RequireHttpsMetadata = false;
             });
 
-            services.AddAutoMapper(typeof(Startup));
             services.AddControllers(opt =>
             {
                 opt.Filters.Add(new AuthorizeFilter());
             });
-
-            services.Configure<DatabaseSettings>(Configuration.GetSection("DatabaseSettings"));
-
-            services.AddSingleton<IDatabaseSettings>(sp =>
-            {
-                return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
-            });
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<ICourseService, CourseService>();
-
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Course.Services.Catalog", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Course.Services.PhotoStock", Version = "v1" });
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,8 +51,10 @@ namespace Course.Services.Catalog
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Course.Services.Catalog v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Course.Services.PhotoStock v1"));
             }
+
+            app.UseStaticFiles();
 
             app.UseRouting();
             app.UseAuthentication();
