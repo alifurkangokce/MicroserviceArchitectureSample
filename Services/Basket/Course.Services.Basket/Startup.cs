@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Course.Services.Basket.Services;
+using Course.Services.Basket.Settings;
+using Microsoft.Extensions.Options;
 
 namespace Course.Services.Basket
 {
@@ -25,6 +28,15 @@ namespace Course.Services.Basket
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
+
+            services.AddSingleton<RedisService>(sp =>
+            {
+                var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+                var redis = new RedisService(redisSettings.Port,redisSettings.Host);
+                redis.Connect();
+                return redis;
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
