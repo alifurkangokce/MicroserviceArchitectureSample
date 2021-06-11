@@ -7,3 +7,4 @@ Services
 -OrderAPI=>5015
 -FakePaymentAPI=>5016
 -Gateway=>5000
+-Web=>5010
