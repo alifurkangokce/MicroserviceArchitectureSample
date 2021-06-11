@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Course.Web.Models;
 
 namespace Course.Web
 {
@@ -22,6 +23,8 @@ namespace Course.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings")); //Options Pattern
+            services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings")); //Options Pattern
             services.AddControllersWithViews();
         }
 
