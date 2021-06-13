@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Course.Web.Models;
+using Course.Web.Services;
+using Course.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Course.Web
 {
@@ -23,8 +26,19 @@ namespace Course.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+            services.AddHttpClient<IIdentityService,IdentityService>();
             services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings")); //Options Pattern
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings")); //Options Pattern
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.LoginPath = "/Auth/SignIn";
+                    options.ExpireTimeSpan = TimeSpan.FromDays(60);
+                    options.SlidingExpiration = true;
+                    options.Cookie.Name = "webcookie";
+                });
+
             services.AddControllersWithViews();
         }
 
@@ -42,7 +56,7 @@ namespace Course.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
