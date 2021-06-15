@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Course.Web.Models;
 using Course.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Course.Web.Controllers
 {
@@ -41,6 +43,13 @@ namespace Course.Web.Controllers
             }
 
             return RedirectToAction(nameof(Index), "Home");
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _IdentityService.RevokeRefreshToken();
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
     }

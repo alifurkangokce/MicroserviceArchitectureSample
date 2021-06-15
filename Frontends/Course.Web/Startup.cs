@@ -32,7 +32,7 @@ namespace Course.Web
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings")); //Options Pattern
             var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
             services.AddHttpClient<IIdentityService, IdentityService>();
-
+            services.AddScoped<ResourceOwnerPasswordTokenHandler>();
             services.AddHttpClient<IUserService, UserService>(opt =>
             {
                 opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
