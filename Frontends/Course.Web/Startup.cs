@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Course.Web.Handler;
 using Course.Web.Models;
 using Course.Web.Services;
 using Course.Web.Services.Interfaces;
@@ -27,9 +28,16 @@ namespace Course.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-            services.AddHttpClient<IIdentityService,IdentityService>();
             services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings")); //Options Pattern
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings")); //Options Pattern
+            var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
+            services.AddHttpClient<IIdentityService, IdentityService>();
+
+            services.AddHttpClient<IUserService, UserService>(opt =>
+            {
+                opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
+            }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
                 options =>
                 {
