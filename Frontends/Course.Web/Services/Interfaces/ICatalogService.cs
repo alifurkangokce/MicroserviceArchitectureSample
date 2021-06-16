@@ -9,6 +9,7 @@ namespace Course.Web.Services.Interfaces
     public interface ICatalogService
     {
         Task<List<CourseViewModel>> GetAllCourseAsync();
+        Task<List<CategoryViewModel>> GetAllCategoryAsync();
         Task<List<CourseViewModel>> GetAllCourseByUserIdAsync(string userId);
         Task<CourseViewModel> GetByCourseId(string courseId);
 
