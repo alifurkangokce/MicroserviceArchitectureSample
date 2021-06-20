@@ -85,5 +85,11 @@ namespace Course.Web.Controllers
             await _catalogService.UpdateCourseAsync(courseUpdateInput);
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _catalogService.DeleteCourseAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

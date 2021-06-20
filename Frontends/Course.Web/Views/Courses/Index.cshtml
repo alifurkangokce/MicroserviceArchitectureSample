@@ -33,6 +33,9 @@
                                 <td>
                                     <a asp-controller="Courses" asp-action="Update" asp-route-id="@item.Id" class="btn btn-success btn-sm">Güncelle</a>
                                 </td>
+                                <td>
+                                    <a asp-controller="Courses" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Sil</a>
+                                </td>
                             </tr>
                         }
                         </tbody>
