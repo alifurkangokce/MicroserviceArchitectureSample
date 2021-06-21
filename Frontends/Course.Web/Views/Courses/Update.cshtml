@@ -9,13 +9,12 @@
                 <h5 class="card-title">Kurs Güncelleme</h5>
                 <form asp-controller="Courses" asp-action="Update" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly"></div>
-                    <input type="hidden" asp-for="Id"/>
-                    <input type="hidden" asp-for="UserId"/>
-                    <input type="hidden" asp-for="Picture"/>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="Picture" />
                     <div class="mb-3">
                         <label class="form-label" asp-for="CategoryId"></label>
                         <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.categoryList">
-                            
                         </select>
                         <span class="text-danger" asp-validation-for="CategoryId"></span>
                     </div>
@@ -40,7 +39,12 @@
                         <input asp-for="Feature.Duration" class="form-control" />
                         <span class="text-danger" asp-validation-for="Feature.Duration"></span>
                     </div>
-                    @*Resim Input Gelicek*@
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="PhotoFormFile">
+                            <img style="width: 72px;" src="http://localhost:5012/photos/@Model.Picture" class="img-thumbnail" />
+                            <input type="file" asp-for="PhotoFormFile" class="form-control" />
+                        </label>
+                    </div>
                     <button type="submit" class="btn btn-primary">Kurs Güncelle</button>
                 </form>
             </div>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Course.Shared.Dtos;
 using Course.Web.Models.PhotoStocks;
 using Course.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -38,7 +39,8 @@ namespace Course.Web.Services
                 return null;
             }
 
-            return await response.Content.ReadFromJsonAsync<PhotoViewModel>();
+            var responseSuccess= await response.Content.ReadFromJsonAsync<Response<PhotoViewModel>>();
+            return responseSuccess.Data;
         }
 
         public async Task<bool> DeletePhoto(string photoUrl)

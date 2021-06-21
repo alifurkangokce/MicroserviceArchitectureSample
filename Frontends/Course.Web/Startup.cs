@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Course.Shared.Services;
 using Course.Web.Handler;
+using Course.Web.Helpers;
 using Course.Web.Models;
 using Course.Web.Services;
 using Course.Web.Services.Interfaces;
@@ -35,6 +36,7 @@ namespace Course.Web
             services.AddHttpClient<IIdentityService, IdentityService>();
             services.AddScoped<ResourceOwnerPasswordTokenHandler>();
             services.AddScoped<ClientCredentialTokenHandler>();
+            services.AddSingleton<PhotoHelper>();
             services.AddAccessTokenManagement();
             services.AddScoped<ISharedIdentityService,SharedIdentityService>();
             services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
