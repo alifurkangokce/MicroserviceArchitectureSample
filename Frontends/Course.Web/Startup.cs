@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Course.Shared.Services;
+using Course.Web.Extensions;
 using Course.Web.Handler;
 using Course.Web.Helpers;
 using Course.Web.Models;
@@ -32,28 +33,15 @@ namespace Course.Web
             services.AddHttpContextAccessor();
             services.Configure<ServiceApiSettings>(Configuration.GetSection("ServiceApiSettings")); //Options Pattern
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings")); //Options Pattern
-            var serviceApiSettings = Configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
-            services.AddHttpClient<IIdentityService, IdentityService>();
+            
+            
             services.AddScoped<ResourceOwnerPasswordTokenHandler>();
             services.AddScoped<ClientCredentialTokenHandler>();
             services.AddSingleton<PhotoHelper>();
             services.AddAccessTokenManagement();
             services.AddScoped<ISharedIdentityService,SharedIdentityService>();
-            services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
-            services.AddHttpClient<ICatalogService, CatalogService>(opt =>
-            {
-                opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
-            }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
-            services.AddHttpClient<IPhotoStockService, PhotoStockService>(opt =>
-            {
-                opt.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.PhotoStock.Path}");
-            }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
-
-            services.AddHttpClient<IUserService, UserService>(opt =>
-            {
-                opt.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
-            }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+            services.AddHttpClientServices(Configuration);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
                 options =>
