@@ -9,7 +9,7 @@ namespace Course.Web.Models.Catalog
     public class FeatureViewModel
     {
         [Display(Name = "Kalan Süre")]
-        [Required]
+
         public int Duration { get; set; }
     }
 }
