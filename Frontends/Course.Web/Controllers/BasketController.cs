@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Course.Web.Models.Baskets;
+using Course.Web.Models.Discounts;
 using Course.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
@@ -37,6 +38,19 @@ namespace Course.Web.Controllers
         public async Task<IActionResult> RemoveBasketItem(string courseId)
         {
             await _basketService.RemoveBasketItem(courseId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> ApplyDiscount(DiscountApplyInput discountApplyInput)
+        {
+            var discountStatus = await _basketService.ApplyDiscount(discountApplyInput.Code);
+            TempData["discountStatus"] = discountStatus;
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CancelApplyDiscount()
+        {
+            await _basketService.CancelApplyDiscount();
             return RedirectToAction(nameof(Index));
         }
     }
