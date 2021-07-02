@@ -36,7 +36,7 @@ namespace Course.Services.Basket.Services
         public async Task<Response<bool>> Delete(string userId)
         {
             var status = await _redisService.GetDb().KeyDeleteAsync(userId);
-            return status ? Response<bool>.Success(204) : Response<bool>.Fail("Basket Not Found", 404);
+            return status ? Response<bool>.Success(204) : Response<bool>.Fail("Basket not found", 404);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Course.Web.Services
                 TotalPrice = basket.TotalPrice
             };
             var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
-            if (responsePayment)
+            if (!responsePayment)
             {
                 return new OrderCreatedViewModel() {Error = "Ödeme Alınamadı", IsSuccessful = false};
             }
@@ -57,7 +57,7 @@ namespace Course.Web.Services
             {
                 var orderItem=new OrderItemViewModel()
                 {
-                    Price = x.Price,ProductId = x.CourseId,PictureUrl = "",
+                    Price = x.GetCurrentPrice,ProductId = x.CourseId,PictureUrl = "",
                     ProductName = x.CourseName
                 };
                 orderCreateInput.OrderItems.Add(orderItem);
@@ -67,8 +67,9 @@ namespace Course.Web.Services
             {
                 return new OrderCreatedViewModel() { Error = "Sipariş Oluşturulamadı", IsSuccessful = false };
             }
-            var orderCreatedViewModel = await response.Content.ReadFromJsonAsync<OrderCreatedViewModel>();
-            return orderCreatedViewModel;
+            var orderCreatedViewModel = await response.Content.ReadFromJsonAsync<Response<OrderCreatedViewModel>>();
+            await _basketService.Delete();
+            return orderCreatedViewModel.Data;
         }
 
         public Task SuspendOrder(CheckoutInfoInput checkoutInfoInput)

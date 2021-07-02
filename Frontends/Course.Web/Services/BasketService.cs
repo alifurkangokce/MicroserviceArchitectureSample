@@ -42,7 +42,7 @@ namespace Course.Web.Services
 
         public async Task<bool> Delete()
         {
-            var result = await _httpClient.DeleteAsync("basket");
+            var result = await _httpClient.DeleteAsync("baskets");
             return result.IsSuccessStatusCode;
         }
 

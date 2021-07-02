@@ -9,6 +9,6 @@ namespace Course.Web.Models.Orders
     {
         public int OrderId { get; set; }
         public string Error { get; set; }
-        public bool IsSuccessful { get; set; }
+        public bool IsSuccessful { get; set; } = true;
     }
 }
