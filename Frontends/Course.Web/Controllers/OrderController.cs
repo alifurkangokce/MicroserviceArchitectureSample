@@ -29,17 +29,21 @@ namespace Course.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckOut(CheckoutInfoInput checkoutInfoInput)
         {
-            var orderStatus = await _orderService.CreateOrder(checkoutInfoInput);
-            if (!orderStatus.IsSuccessful)
+            //1.yol senktron iletişim
+            //var orderStatus = await _orderService.CreateOrder(checkoutInfoInput);
+
+            var orderSuspend = await _orderService.SuspendOrder(checkoutInfoInput);
+            if (!orderSuspend.IsSuccessful)
             {
                 var basket = await _basketService.Get();
                 ViewBag.basket = basket;
-                ViewBag.error = orderStatus.Error;
+                ViewBag.error = orderSuspend.Error;
                 return View();
             }
+            //1.yol senktron iletişim
+            //return RedirectToAction(nameof(SuccessfulCheckout),new {orderId= orderSuspend.OrderId});
 
-            return RedirectToAction(nameof(SuccessfulCheckout),new {orderId=orderStatus.OrderId});
-
+            return RedirectToAction(nameof(SuccessfulCheckout), new {orderId = new Random().Next(1, 1000)});
 
         }
 

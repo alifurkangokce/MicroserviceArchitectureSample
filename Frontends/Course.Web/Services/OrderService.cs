@@ -72,9 +72,53 @@ namespace Course.Web.Services
             return orderCreatedViewModel.Data;
         }
 
-        public Task SuspendOrder(CheckoutInfoInput checkoutInfoInput)
+        public async Task<OrderSuspendViewModel> SuspendOrder(CheckoutInfoInput checkoutInfoInput)
         {
-            throw new NotImplementedException();
+            var basket = await _basketService.Get();
+            var orderCreateInput = new OrderCreateInput()
+            {
+                BuyerId = _identityService.GetUserId,
+                Address = new AddressCreateInput
+                {
+                    Province = checkoutInfoInput.Province,
+                    Distinct = checkoutInfoInput.Distinct,
+                    Line = checkoutInfoInput.Line,
+                    Street = checkoutInfoInput.Street,
+                    ZipCode = checkoutInfoInput.ZipCode
+                }
+            };
+            basket.BasketItems.ForEach(x =>
+            {
+                var orderItem = new OrderItemViewModel()
+                {
+                    Price = x.GetCurrentPrice,
+                    ProductId = x.CourseId,
+                    PictureUrl = "",
+                    ProductName = x.CourseName
+                };
+                orderCreateInput.OrderItems.Add(orderItem);
+            });
+            var paymentInfoInput = new PaymentInfoInput()
+            {
+                CardName = checkoutInfoInput.CardName,
+                CardNumber = checkoutInfoInput.CardNumber,
+                Expiration = checkoutInfoInput.Expiration,
+                CVV = checkoutInfoInput.CVV,
+                TotalPrice = basket.TotalPrice,
+                Order = orderCreateInput
+            };
+            var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
+            if (!responsePayment)
+            {
+                return new OrderSuspendViewModel() { Error = "Ödeme Alınamadı", IsSuccessful = false };
+            }
+
+            await _basketService.Delete();
+            return new OrderSuspendViewModel() {IsSuccessful = true};
+
+
+
+
         }
 
         public async Task<List<OrderViewModel>> GetOrder()
